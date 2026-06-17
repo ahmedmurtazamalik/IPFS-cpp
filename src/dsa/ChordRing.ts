@@ -1,5 +1,4 @@
 import { BTree } from "./BTree";
-import { sha1, getLeastBits } from "./Sha1";
 
 export class ChordNode {
   id: bigint;
@@ -85,8 +84,11 @@ export class ChordRing {
     if (manualId !== undefined) {
       id = manualId % maxSpace;
     } else {
-      const hash = sha1(name);
-      id = getLeastBits(hash, this.m);
+      let candidate = 1n;
+      while (this.nodes.some(n => n.id === candidate)) {
+        candidate++;
+      }
+      id = candidate % maxSpace;
     }
 
     // Resolve duplicate ID by incrementing

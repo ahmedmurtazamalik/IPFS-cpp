@@ -498,7 +498,8 @@ button:disabled {
   fill: #1e1e2f;
   stroke: rgba(255, 255, 255, 0.5);
   stroke-width: 2;
-  transition: all 0.3s ease;
+  r: 8px;
+  transition: r 0.3s ease, stroke 0.3s ease, fill 0.3s ease;
 }
 
 .chord-node-group {
@@ -508,7 +509,7 @@ button:disabled {
 .chord-node-group:hover .chord-node-circle {
   stroke: var(--color-secondary);
   fill: var(--color-secondary-glow);
-  transform: scale(1.2);
+  r: 11px;
 }
 
 .chord-node-group.selected .chord-node-circle {
