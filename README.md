@@ -33,8 +33,8 @@ This project simulates how files are content-addressed, routed across a peer-to-
 Normally, when you access a file on the internet (like a photo or a video), you request it from a specific computer at a specific address (e.g., `http://server.com/my-photo.jpg`). This is **Location-Based Addressing**. 
 *   **The Flaw:** If that server crashes, gets blocked, or goes offline, your photo is lost forever—even if millions of other people have copies of that exact same photo on their own computers.
 
-### The Solution: Content-Based Addressing & IPFS
-IPFS changes this by using **Content-Based Addressing**. Instead of asking *where* a file is, you ask for the file by *what* it is. 
+### The Solution: Content-Based Addressing & InterPlanetary File System (IPFS)
+The InterPlanetary File System (IPFS) changes this by using **Content-Based Addressing**. Instead of asking *where* a file is, you ask for the file by *what* it is. 
 1.  **Unique Fingerprints (Hashing):** Every file gets run through a mathematical formula that generates a unique "fingerprint" (a hash key, like a book's ISBN code) based *only* on its content. If you change even one letter in a file, its fingerprint changes completely.
 2.  **Distributed Post Offices (DHT):** Instead of storing all files on one giant central computer, files are scattered across many different computers (nodes) around the world. To find out who has which file, the nodes form a circular ring. 
 3.  **Smart Routing (Finger Tables):** When you want a file, you ask any computer in the ring. Using a built-in directory booklet (routing table), computers pass your request along the shortest path until it hits the machine responsible for storing that file.

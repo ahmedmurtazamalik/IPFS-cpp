@@ -80,7 +80,7 @@ export default function App() {
       const hash1 = sha1(file1Text);
       const key1 = getLeastBits(hash1, 5); // key 12. Successor is Node 14.
 
-      const file2Text = "IPFS protocol uses Distributed Hash Tables for content-addressed routing.";
+      const file2Text = "InterPlanetary File System (IPFS) protocol uses Distributed Hash Tables for content-addressed routing.";
       const hash2 = sha1(file2Text);
       const key2 = getLeastBits(hash2, 5); // key 26. Successor is Node 28.
 
@@ -145,6 +145,77 @@ export default function App() {
       setSelectedNodeId(ringRef.current.nodes[0]?.id ?? null);
     }
     syncMockFiles();
+    forceUpdate();
+  };
+
+  const handleAutoPopulate = () => {
+    const ring = new ChordRing(m, btreeOrder);
+    ringRef.current = ring;
+
+    const nodeNames = [
+      "google.com", 
+      "wikipedia.org", 
+      "github.com", 
+      "stackoverflow.com",
+      "reddit.com", 
+      "netflix.com", 
+      "amazon.com", 
+      "apple.com"
+    ];
+
+    const maxSpace = ring.getMaxSpace();
+    const numNodes = nodeNames.length;
+
+    nodeNames.forEach((name, i) => {
+      let nodeId: bigint;
+      if (m === 4) {
+        nodeId = BigInt(i * 2 + 1);
+      } else if (m === 5) {
+        const space5Ids = [1n, 4n, 9n, 11n, 14n, 18n, 22n, 28n];
+        nodeId = space5Ids[i % space5Ids.length];
+      } else if (m === 8) {
+        nodeId = BigInt(Math.floor((i / numNodes) * 256) + 5);
+      } else {
+        const hash = sha1(name);
+        nodeId = getLeastBits(hash, m);
+      }
+      ring.addNode(name, nodeId % maxSpace);
+    });
+
+    const filePresets = [
+      { fileName: "whitepaper.txt", content: "InterPlanetary File System (IPFS) is a peer-to-peer hypermedia protocol designed to preserve and grow humanity's knowledge by making the web upgradeable, resilient, and more open." },
+      { fileName: "bitcoin.pdf", content: "A Peer-to-Peer Electronic Cash System. A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution." },
+      { fileName: "index.html", content: "<!DOCTYPE html><html><head><title>InterPlanetary File System</title></head><body><h1>Welcome to InterPlanetary File System!</h1></body></html>" },
+      { fileName: "dataset.csv", content: "id,name,value\n1,Alice,100\n2,Bob,200\n3,Charlie,300\n4,David,400\n5,Eve,500" },
+      { fileName: "config.json", content: '{\n  "identity": "QmHash",\n  "addresses": {\n    "swarm": ["/ip4/0.0.0.0/tcp/4001"]\n  }\n}' },
+      { fileName: "notes.txt", content: "Remember to review data structures: B-Trees for disk indexing and Chord DHT for network routing. Fall 2023 CS2001." },
+      { fileName: "main.py", content: "def main():\n    print('Hello from the InterPlanetary File System')\nif __name__ == '__main__':\n    main()" },
+      { fileName: "style.css", content: "body {\n  background: #09090e;\n  color: #e2e8f0;\n  font-family: sans-serif;\n}" },
+      { fileName: "todo.md", content: "# Todo List\n- [x] Implement Chord Ring\n- [x] Implement B-Tree\n- [ ] Deploy to Vercel" },
+      { fileName: "hello.txt", content: "Hello, World! This is a simple test file stored inside the InterPlanetary File System (IPFS) DHT." }
+    ];
+
+    filePresets.forEach(file => {
+      const hash = sha1(file.content);
+      const key = getLeastBits(hash, m);
+      const targetNode = ring.findSuccessor(key);
+      targetNode.btree.insert({
+        key,
+        fileName: file.fileName,
+        content: file.content,
+        hash,
+      });
+    });
+
+    syncMockFiles();
+
+    if (ring.nodes.length > 0) {
+      setSelectedNodeId(ring.nodes[0].id);
+    } else {
+      setSelectedNodeId(null);
+    }
+
+    resetRouting();
     forceUpdate();
   };
 
@@ -346,7 +417,7 @@ export default function App() {
         <div className="logo-container">
           <div className="logo-icon">🪐</div>
           <div>
-            <h1>IPFS Ring DHT & B-Tree Simulation</h1>
+            <h1>InterPlanetary File System (IPFS) Ring DHT & B-Tree Simulation</h1>
             <p className="subtitle">Interactive Data Structures visualizer running entirely client-side</p>
           </div>
         </div>
@@ -379,10 +450,10 @@ export default function App() {
                   }}
                   disabled={currentPathIndex !== -1 && isPlaying}
                 >
-                  <option value={4}>4 bits (Space: 16)</option>
-                  <option value={5}>5 bits (Space: 32)</option>
-                  <option value={8}>8 bits (Space: 256)</option>
-                  <option value={160}>160 bits (SHA-1 Space)</option>
+                  <option value={4}>4 bits (Space 16)</option>
+                  <option value={5}>5 bits (Space 32)</option>
+                  <option value={8}>8 bits (Space 256)</option>
+                  <option value={160}>160 bits (SHA-1)</option>
                 </select>
               </div>
 
@@ -397,19 +468,28 @@ export default function App() {
                   }}
                   disabled={currentPathIndex !== -1 && isPlaying}
                 >
-                  <option value={3}>Order 3 (Max Keys: 2)</option>
-                  <option value={4}>Order 4 (Max Keys: 3)</option>
-                  <option value={5}>Order 5 (Max Keys: 4)</option>
+                  <option value={3}>Order 3 (Max: 2)</option>
+                  <option value={4}>Order 4 (Max: 3)</option>
+                  <option value={5}>Order 5 (Max: 4)</option>
                 </select>
               </div>
             </div>
-            <button
-              onClick={() => resetRing(m, btreeOrder)}
-              className="btn-danger btn-full"
-              disabled={currentPathIndex !== -1 && isPlaying}
-            >
-              Reset Simulation Ring
-            </button>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem" }}>
+              <button
+                onClick={handleAutoPopulate}
+                className="btn-secondary btn-full"
+                disabled={currentPathIndex !== -1 && isPlaying}
+              >
+                ⚡ Auto-Populate Network
+              </button>
+              <button
+                onClick={() => resetRing(m, btreeOrder)}
+                className="btn-danger btn-full"
+                disabled={currentPathIndex !== -1 && isPlaying}
+              >
+                Reset Simulation Ring
+              </button>
+            </div>
           </div>
 
           {/* Node Management */}
@@ -605,7 +685,7 @@ export default function App() {
 
           {/* Filesystem panel */}
           <div className="glass-panel panel-padding mt-4">
-            <h2>📂 IPFS File Manager</h2>
+            <h2>📂 InterPlanetary File System (IPFS) File Manager</h2>
 
             <div className="file-tabs-container">
               {/* File Insertion tab */}
@@ -631,7 +711,7 @@ export default function App() {
                     ></textarea>
                   </div>
                   <button type="submit" className="btn-secondary btn-full mt-2">
-                    Publish to IPFS (DHT Route & Store)
+                    Publish to InterPlanetary File System (IPFS) (DHT Route & Store)
                   </button>
                 </form>
               </div>
@@ -677,9 +757,9 @@ export default function App() {
 
               {/* Dynamic list of tracked files */}
               <div className="tab-section mt-4">
-                <h3>Tracked IPFS Files ({mockFiles.length})</h3>
+                <h3>Tracked InterPlanetary File System (IPFS) Files ({mockFiles.length})</h3>
                 {mockFiles.length === 0 ? (
-                  <p className="no-items-text">No files published to this IPFS ring yet.</p>
+                  <p className="no-items-text">No files published to this InterPlanetary File System (IPFS) ring yet.</p>
                 ) : (
                   <div className="files-table-container">
                     <table className="files-table">

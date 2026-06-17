@@ -232,6 +232,7 @@ h3 {
   gap: 0.4rem;
   margin-bottom: 0.75rem;
   flex: 1;
+  min-width: 0;
 }
 
 label {
@@ -250,6 +251,9 @@ input, select, textarea {
   outline: none;
   font-family: var(--font-sans);
   transition: all 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 input:focus, select:focus, textarea:focus {
