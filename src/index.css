@@ -200,7 +200,7 @@ h1 {
   flex-grow: 1;
 }
 .min-h-ring {
-  min-height: 410px;
+  min-height: 520px;
 }
 .font-mono {
   font-family: var(--font-mono);
@@ -438,8 +438,8 @@ button:disabled {
 
 /* Chord Ring Visualizer CSS */
 .chord-ring-svg-container {
-  width: 320px;
-  height: 320px;
+  width: 420px;
+  height: 420px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -624,7 +624,7 @@ button:disabled {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   line-height: 1.4;
-  height: 150px;
+  height: 100px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
