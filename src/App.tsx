@@ -372,15 +372,26 @@ export default function App() {
       {/* Header */}
       <header className="app-header glass-panel">
         <div className="logo-container">
-          <div className="logo-icon">🪐</div>
+          <div className="logo-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ filter: "drop-shadow(0 0 4px var(--color-secondary-glow))" }}>
+              <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10Z"/>
+              <path d="m12 2 8 8-8 8-8-8 8-8Z"/>
+              <circle cx="12" cy="10" r="2" fill="currentColor"/>
+            </svg>
+          </div>
           <div>
-            <h1>InterPlanetary File System (IPFS) Ring DHT & B-Tree Simulation</h1>
+            <h1>InterPlanetary File System (IPFS) Ring DHT &amp; B-Tree Simulation</h1>
             <p className="subtitle">Interactive Data Structures visualizer running entirely client-side</p>
           </div>
         </div>
         <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-          <button onClick={() => { setShowTutorial(true); setTutorialSlide(0); }} className="btn-secondary">
-            📖 Guide
+          <button onClick={() => { setShowTutorial(true); setTutorialSlide(0); }} className="btn-secondary" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 16v-4"/>
+              <path d="M12 8h.01"/>
+            </svg>
+            Guide
           </button>
           <div className="header-badge">
             Active Space Size: 2<sup>{m}</sup> ({nodesList.length} Nodes)
@@ -394,7 +405,7 @@ export default function App() {
         <section className="col-controls">
           {/* Config Setup */}
           <div className="glass-panel panel-padding">
-            <h2>⚙️ System Parameters</h2>
+            <h2>System Parameters</h2>
             <div className="config-row">
               <div className="form-group">
                 <label>Identifier Bits (m)</label>
@@ -436,8 +447,12 @@ export default function App() {
                 onClick={handleAutoPopulate}
                 className="btn-secondary btn-full"
                 disabled={currentPathIndex !== -1 && isPlaying}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
               >
-                ⚡ Auto-Populate Network
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m12 3-1.912 5.886H3.877l4.918 3.573L6.883 18.35 12 14.777l5.117 3.573-1.912-5.89 4.918-3.573h-6.211L12 3z" fill="currentColor"/>
+                </svg>
+                Auto-Populate Network
               </button>
               <button
                 onClick={() => resetRing(m, btreeOrder)}
@@ -451,7 +466,7 @@ export default function App() {
 
           {/* Node Management */}
           <div className="glass-panel panel-padding mt-4">
-            <h2>🖥️ Machine Control Center</h2>
+            <h2>Machine Control Center</h2>
             <form onSubmit={handleAddNode} className="form-node-add">
               <div className="form-group">
                 <label>Machine Name</label>
@@ -509,8 +524,9 @@ export default function App() {
                         className="btn-remove-node"
                         title="Remove machine from DHT gracefully"
                         disabled={currentPathIndex !== -1 && isPlaying}
+                        style={{ fontSize: "1.2rem", color: "var(--color-danger)", display: "flex", alignItems: "center", justifyContent: "center" }}
                       >
-                        ❌
+                        &times;
                       </button>
                     </div>
                   ))}
@@ -524,10 +540,16 @@ export default function App() {
         <section className="col-dht">
           {/* Ring Canvas */}
           <div className="glass-panel panel-padding relative flex-center-col min-h-ring">
-            <h2>🌌 Chord DHT Circular Space</h2>
+            <h2>Chord DHT Circular Space</h2>
             {nodesList.length === 0 ? (
               <div className="empty-ring-placeholder">
-                <div className="placeholder-pulse">⚠️</div>
+                <div className="placeholder-pulse" style={{ color: "var(--color-danger)" }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/>
+                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                </div>
                 <p>The Chord ring is empty. Please add nodes from the left panel to begin.</p>
               </div>
             ) : (
@@ -552,19 +574,33 @@ export default function App() {
                     onClick={() => setIsPlaying(!isPlaying)}
                     className="btn-control"
                     title={isPlaying ? "Pause Routing" : "Resume Routing"}
+                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
-                    {isPlaying ? "⏸️ Pause" : "▶️ Play"}
+                    {isPlaying ? (
+                      <>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                        Pause
+                      </>
+                    ) : (
+                      <>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        Play
+                      </>
+                    )}
                   </button>
                   <button
                     onClick={stepForward}
                     className="btn-control"
                     disabled={isPlaying || currentPathIndex === animatingPath.length - 1}
                     title="Step Forward 1 Hop"
+                    style={{ display: "flex", alignItems: "center", gap: "6px" }}
                   >
-                    ⏭️ Step
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polygon points="5 4 15 12 5 20 5 4" fill="currentColor"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+                    Step
                   </button>
-                  <button onClick={resetRouting} className="btn-control" title="Clear path">
-                    🔄 Reset
+                  <button onClick={resetRouting} className="btn-control" title="Clear path" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Reset
                   </button>
                 </div>
                 <div className="speed-slider">
@@ -584,7 +620,7 @@ export default function App() {
 
           {/* Simulation Console Trace logs */}
           <div className="glass-panel panel-padding mt-4 flex-grow-1 flex-col">
-            <h2>📟 Simulation Routing Trace Console</h2>
+            <h2>Simulation Routing Trace Console</h2>
             <div className="console-logs-container">
               {animatingLogs.length === 0 ? (
                 <div className="empty-console">
@@ -616,7 +652,7 @@ export default function App() {
           {/* B-Tree Visualization */}
           <div className="glass-panel panel-padding flex-col">
             <div className="inspect-header">
-              <h2>🌳 Machine B-Tree Index Inspector</h2>
+              <h2>Machine B-Tree Index Inspector</h2>
               {selectedNode && (
                 <div className="selected-node-tag">
                   Node {m === 160 ? `0x${selectedNode.id.toString(16).slice(0, 8)}...` : selectedNode.id.toString()}
@@ -642,7 +678,7 @@ export default function App() {
 
           {/* Filesystem panel */}
           <div className="glass-panel panel-padding mt-4">
-            <h2>📂 InterPlanetary File System (IPFS) File Manager</h2>
+            <h2>InterPlanetary File System (IPFS) File Manager</h2>
 
             <div className="file-tabs-container">
               {/* File Insertion tab */}
@@ -704,8 +740,14 @@ export default function App() {
                       <button
                         onClick={() => downloadFile(searchResult)}
                         className="btn-primary btn-full mt-2"
+                        style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}
                       >
-                        📥 Download Mock Text File
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                          <polyline points="7 10 12 15 17 10"/>
+                          <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download Mock Text File
                       </button>
                     </div>
                   </div>
@@ -741,15 +783,26 @@ export default function App() {
                                 onClick={() => downloadFile(file)}
                                 className="btn-icon"
                                 title="Download File"
+                                style={{ color: "var(--color-secondary)" }}
                               >
-                                📥
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                  <polyline points="7 10 12 15 17 10"/>
+                                  <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
                               </button>
                               <button
                                 onClick={() => handleDeleteFile(file.key)}
                                 className="btn-icon"
                                 title="Delete File"
+                                style={{ color: "var(--color-danger)" }}
                               >
-                                🗑️
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="3 6 5 6 21 6"/>
+                                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                  <line x1="10" y1="11" x2="10" y2="17"/>
+                                  <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
                               </button>
                             </td>
                           </tr>
@@ -771,18 +824,18 @@ export default function App() {
             
             {tutorialSlide === 0 && (
               <div className="tutorial-slide">
-                <h2>🪐 What is the InterPlanetary File System (IPFS)?</h2>
+                <h2>What is the InterPlanetary File System (IPFS)?</h2>
                 <p>Standard web servers fetch files using <strong>Location Addressing</strong> (e.g. <code>https://server.com/image.png</code>). If that server goes down, the file is lost.</p>
                 <p>IPFS solves this using <strong>Content Addressing</strong>. Every file is represented by a unique hash of its contents (SHA-1 in this simulation). You retrieve the file by asking for its hash key, regardless of which machine stores it.</p>
                 <div className="tutorial-diagram">
-                  <span>File content: "Hello"</span> ➡️ <span>SHA-1 Hash</span> ➡️ <span>Key ID: 12</span>
+                  <span>File content: "Hello"</span> &rarr; <span>SHA-1 Hash</span> &rarr; <span>Key ID: 12</span>
                 </div>
               </div>
             )}
 
             {tutorialSlide === 1 && (
               <div className="tutorial-slide">
-                <h2>🌌 The Ring DHT (Distributed Hash Table)</h2>
+                <h2>The Ring DHT (Distributed Hash Table)</h2>
                 <p>To avoid storing all files on one server, files are geo-distributed across multiple participating machines.</p>
                 <p>We map both files and machines into a <strong>circular identifier space</strong> from <code>0</code> to <code>2<sup>m</sup>-1</code>. A file is stored on the first active node whose ID is greater than or equal to the file's hash key. This node is called the <strong>successor</strong> of the key.</p>
                 <p>For example, in a 5-bit space (keys 0-31), a file with key <code>12</code> is stored at Node <code>14</code> (its successor).</p>
@@ -791,7 +844,7 @@ export default function App() {
 
             {tutorialSlide === 2 && (
               <div className="tutorial-slide">
-                <h2>⚡ Routing Shortcuts: Finger Tables</h2>
+                <h2>Routing Shortcuts: Finger Tables</h2>
                 <p>If queries only hopped to direct successors, finding a file would take <code>O(N)</code> hops (slow). Instead, Chord DHT nodes maintain a **Routing Table** (Finger Table) of size <code>m</code>.</p>
                 <p>The <code>i</code>-th entry of node <code>p</code> points to the successor of <code>p + 2<sup>i-1</sup> mod 2<sup>m</sup></code>. These shortcuts let queries skip across the ring, routing requests in only <strong>O(log N) hops</strong>!</p>
                 <p>Hover over any active node in the circle to see its fingers light up as shortcuts passing through the interior.</p>
@@ -800,7 +853,7 @@ export default function App() {
 
             {tutorialSlide === 3 && (
               <div className="tutorial-slide">
-                <h2>🌳 Node Storage: B-Trees</h2>
+                <h2>Node Storage: B-Trees</h2>
                 <p>When a machine receives a file, it must store and index it efficiently on its local drive. Chord nodes use **B-Trees** for local indexing.</p>
                 <p>A B-Tree is a self-balancing search tree designed to optimize read and write operations on block storage by grouping multiple keys inside single node boxes.</p>
                 <p>Click on any active machine to inspect its local B-Tree dynamically. You can watch nodes split or merge when files are added or deleted.</p>
@@ -809,7 +862,7 @@ export default function App() {
 
             {tutorialSlide === 4 && (
               <div className="tutorial-slide">
-                <h2>🎮 Interactive Guide: Try it Out</h2>
+                <h2>Interactive Guide: Try it Out</h2>
                 <ul>
                   <li style={{ marginBottom: "0.5rem" }}><strong>Add Nodes</strong>: Enter a name (e.g. google.com) and click Add. The system will hash it to locate its spot on the ring.</li>
                   <li style={{ marginBottom: "0.5rem" }}><strong>Upload File</strong>: Provide content. The system hashes it and routes it starting from your selected node.</li>
