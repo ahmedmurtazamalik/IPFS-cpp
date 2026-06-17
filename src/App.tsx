@@ -62,52 +62,9 @@ export default function App() {
   const resetRing = (bitSpace: number, bTreeM: number) => {
     const ring = new ChordRing(bitSpace, bTreeM);
     ringRef.current = ring;
-
-    if (bitSpace === 5) {
-      // Textbook figure 4 initialization: Nodes 1, 4, 9, 11, 14, 28
-      ring.addNode("Node_1", 1n);
-      ring.addNode("Node_4", 4n);
-      ring.addNode("Node_9", 9n);
-      ring.addNode("Node_11", 11n);
-      ring.addNode("Node_14", 14n);
-      ring.addNode("Node_28", 28n);
-
-      // Add sample files
-      // Key = hash(content) % 32
-      // Let's create specific content that hashes to interesting keys:
-      // "wizard_of_oz" -> we can manually force key insertion or map correctly:
-      const file1Text = "Follow the yellow brick road! Discover the Wizard of Oz in Emerald City.";
-      const hash1 = sha1(file1Text);
-      const key1 = getLeastBits(hash1, 5); // key 12. Successor is Node 14.
-
-      const file2Text = "InterPlanetary File System (IPFS) protocol uses Distributed Hash Tables for content-addressed routing.";
-      const hash2 = sha1(file2Text);
-      const key2 = getLeastBits(hash2, 5); // key 26. Successor is Node 28.
-
-      const file3Text = "B-Trees keep indexes balanced for fast O(log N) searches in distributed storage nodes.";
-      const hash3 = sha1(file3Text);
-      const key3 = getLeastBits(hash3, 5); // key 2. Successor is Node 4.
-
-      // Store them directly
-      const node14 = ring.findSuccessor(key1);
-      node14.btree.insert({ key: key1, fileName: "wizard_of_oz.txt", content: file1Text, hash: hash1 });
-
-      const node28 = ring.findSuccessor(key2);
-      node28.btree.insert({ key: key2, fileName: "ipfs_intro.txt", content: file2Text, hash: hash2 });
-
-      const node4 = ring.findSuccessor(key3);
-      node4.btree.insert({ key: key3, fileName: "btree_dsa.txt", content: file3Text, hash: hash3 });
-
-      setMockFiles([
-        { fileName: "wizard_of_oz.txt", content: file1Text, hash: hash1, key: key1, storedNodeId: node14.id },
-        { fileName: "ipfs_intro.txt", content: file2Text, hash: hash2, key: key2, storedNodeId: node28.id },
-        { fileName: "btree_dsa.txt", content: file3Text, hash: hash3, key: key3, storedNodeId: node4.id },
-      ]);
-      setSelectedNodeId(28n); // Default selection
-    } else {
-      setMockFiles([]);
-      setSelectedNodeId(null);
-    }
+    setMockFiles([]);
+    setSelectedNodeId(null);
+    resetRouting();
     forceUpdate();
   };
 
@@ -566,7 +523,7 @@ export default function App() {
         {/* Center Column: Chord Ring Visualizer & Console logs */}
         <section className="col-dht">
           {/* Ring Canvas */}
-          <div className="glass-panel panel-padding relative overflow-hidden flex-center-col min-h-ring">
+          <div className="glass-panel panel-padding relative flex-center-col min-h-ring">
             <h2>🌌 Chord DHT Circular Space</h2>
             {nodesList.length === 0 ? (
               <div className="empty-ring-placeholder">
